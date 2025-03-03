@@ -16,6 +16,25 @@ foreach ($queues as $queue) {
 
 <style>
 
+h1, h2, h3 {
+        color: #007bff;
+        text-align: center;
+        animation: slideFadeIn 1s ease-in-out;
+    }
+
+    h1 {
+        font-size: 4em;
+        margin-bottom: 0.5em;
+    }
+
+    h2 {
+        font-size: 2em;
+        margin-bottom: 1em;
+    }
+
+    h3 {
+        font-size: 1.5em;
+    }
     h1 {
     color:black;
     font-size: 4em;
@@ -52,14 +71,32 @@ foreach ($queues as $queue) {
         font-size: 44px;
     }
 
+    .queue-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+    }
+
     .queue-box {
-    border: 1px solid #000;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    background: #f8f9fa;
-    transition: transform 0.3s ease-in-out;
-    animation: fadeInBounce 0.8s ease-in-out;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px black;
+        text-align: center;
+        max-width: 350px;
+        width: 100%;
+        transition: transform 0.3s ease-in-out;
+        animation: fadeInBounce 0.8s ease-in-out;
+    }
+
+    .holder-container {
+        background: rgba(41, 132, 230, 0.65);
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
     }
 
     @keyframes fadeInBounce {
@@ -82,18 +119,23 @@ foreach ($queues as $queue) {
     }, 10000);
 </script>
 
-<h1>Metro Dumaguete College<br><h2>Office Queue System</h2></h1>
+<h1>Metro Dumaguete College</h1>
+<p>&nbsp</p>
 <div class="queue-container">
     <?php foreach ($department_queues as $department => $queues): ?>
         <div class="queue-box">
             <h3><?= htmlspecialchars($department) ?></h3>
             <?php if (!empty($queues)): ?>
-                <h2># <strong><?= htmlspecialchars($queues[0]['number']) ?></strong></h2>
-                <p> <?= htmlspecialchars($queues[0]['holder']) ?></p>
+                <div class="holder-container">
+                    <h2><strong><?= htmlspecialchars($queues[0]['number']) ?></strong></h2>
+                    <p><?= htmlspecialchars($queues[0]['holder']) ?></p>
+                </div>
                 <?php if (isset($queues[1])): ?>
                     <p>&nbsp</p>
-                    <p>Next #: <strong><?= htmlspecialchars($queues[1]['number']) ?></strong></p>
-                    <p> <?= htmlspecialchars($queues[1]['holder']) ?></p>
+                    <div class="holder-container">
+                        <p>Next #: <strong><?= htmlspecialchars($queues[1]['number']) ?></strong></p>
+                        <p><?= htmlspecialchars($queues[1]['holder']) ?></p>
+                    </div>
                 <?php else: ?>
                     <p>No next in queue</p>
                 <?php endif; ?>
@@ -103,4 +145,4 @@ foreach ($queues as $queue) {
         </div>
     <?php endforeach; ?>
 </div>
-<?php include 'footer.php'; ?>  
+<?php include 'footer.php'; ?>

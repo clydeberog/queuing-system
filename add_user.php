@@ -1,12 +1,19 @@
 <?php
 
 require 'db.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $stmt = $pdo->prepare("INSERT INTO 'users' ('id', 'username' , 'password' ) VALUES (?, ?, ?)");
-    $stmt->execute([$id][$username][$password]);
+    // Get the next ID
+    $stmt = $pdo->query("SELECT MAX(id) AS max_id FROM `users`");
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $next_id = $row['max_id'] + 1;
+
+    $username = htmlspecialchars($_POST['username']);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
+
+    $stmt = $pdo->prepare("INSERT INTO `users` (`id`, `username`, `password`) VALUES (?, ?, ?)");
+    $stmt->execute([$next_id, $username, $password]); // Use commas to separate parameters
+
     header("Location: manage_users.php");
     exit();
 }
@@ -15,9 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include 'header.php'; ?>
 <div>&nbsp</div>
 <form method="POST">
-    <input type="text" name="id" required>
-    <input type="text" name="username" required>
-    <input type="text" name="password" required>
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required> <!-- Use type="password" for password input -->
     <button type="submit">Add User</button>
 </form>
 
