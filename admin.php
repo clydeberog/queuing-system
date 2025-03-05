@@ -30,7 +30,7 @@ foreach ($queues as $queue) {
         <ul class="admin-options">
             <li><a onclick="showPopup('queuePopup', 'add_queue.php')"><i class="fas fa-list"></i> Add to Queue</a></li>
             <li><a onclick="showPopup('moveQueuePopup', 'move_queue.php')"><i class="fas fa-exchange-alt"></i> Move the Number</a></li>
-            <li><a onclick="showPopup('departmentPopup', 'add_department.php')"><i class="fas fa-building"></i> Manage Departments</a></li>
+            <li><a href="manage_departments.php"><i class="fas fa-building"></i> Manage Departments</a></li>
         </ul>
     </div>
     
@@ -62,13 +62,8 @@ foreach ($queues as $queue) {
         </div>
         <button onclick="closePopup('queuePopup')">Close</button>
     </div>
-    <div id="departmentPopup" class="popup">
-        <h3>Manage Departments</h3>
-        <div id="departmentPopupContent">Loading...</div>
-        <button onclick="closePopup('departmentPopup')">Close</button>
-    </div>
     <div id="moveQueuePopup" class="popup">
-        <h3></h3>
+        <h3>Move Queue</h3>
         <div id="moveQueueContent">
             <?php include 'move_queue.php'; ?>
         </div>
