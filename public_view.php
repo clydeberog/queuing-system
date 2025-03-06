@@ -116,7 +116,7 @@ h1, h2, h3 {
     // Auto-refresh every 5 seconds
     setInterval(function() {
         location.reload();
-    }, 10000);
+    }, 5000);
 </script>
 
 <h1>Metro Dumaguete College</h1>
