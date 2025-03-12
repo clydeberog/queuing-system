@@ -28,7 +28,6 @@ $deptStmt = $pdo->query("SELECT id, name FROM departments");
 $departments = $deptStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<h3>Move Queue</h3>
 <form id="moveQueueForm">
     <label for="queue_id">Select Queue:</label>
     <select name="queue_id" id="queue_id" required>

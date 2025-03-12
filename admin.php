@@ -16,46 +16,49 @@ foreach ($queues as $queue) {
 ?>
 <?php include 'header.php'; ?>
     <div class="container">
-        <h2>Admin Panel</h2>
-        <div class="admin-section">
-            <h3>Manage System</h3>
-            <ul class="admin-options">
-                <li><a href="add_user.php">Add Admin/Attendant</a></li>
-                <li><a onclick="showPopup('queueLogsPopup', 'queue_logs.php')">View Queue Logs</a></li>
-                <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
-            </ul>
-        </div>
-        <div>&nbsp</div>
-        <div class="admin-section">
-            <h3>Queue Options</h3>
-            <ul class="admin-options">
-                <li><a href="add_queue.php"><i class="fas fa-list"></i> Add to Queue</a></li>
-                <li><a onclick="showPopup('moveQueuePopup', 'move_queue.php')"><i class="fas fa-exchange-alt"></i> Move the Number</a></li>
-                <li><a href="manage_departments.php"><i class="fas fa-building"></i> Manage Departments</a></li>
-            </ul>
-        </div>
-        
-        <h2>Current Queues</h2>
-        <div class="queue-container" id="queueList">
-            <?php foreach ($department_queues as $department => $queues): ?>
-                <div class="queue-box">
-                    <h3><?= htmlspecialchars($department) ?></h3>
-                    <?php if (!empty($queues)): ?>
-                        <p>Active: <strong id="activeQueue-<?= $queues[0]['department_id'] ?>" class="active-queue"> <?= htmlspecialchars($queues[0]['number']) ?></strong></p>
-                        <p>Name: <?= htmlspecialchars($queues[0]['holder']) ?></p>
-
-                        <button class="animated-button" onclick="updateQueue(<?= $queues[0]['department_id'] ?>, 'prev')">⬅ Previous</button>
-                        <button class="animated-button" onclick="updateQueue(<?= $queues[0]['department_id'] ?>, 'next')">Next ➡</button>
-                    <?php else: ?>
-                        <p>No active queue</p>
-                    <?php endif; ?>
+        <div class="admin-content">
+            <div class="left-column">
+                <div class="boxed-container">
+                <h2>Admin Panel</h2>
+                    <div class="admin-section">
+                        <h3>Manage System</h3>
+                        <ul class="admin-options">
+                            <li><a href="add_user.php">Add Admin/Attendant</a></li>
+                            <li><a onclick="showPopup('queueLogsPopup', 'queue_logs.php')">View Queue Logs</a></li>
+                            <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+                        </ul>
+                    </div>
+                    <div>&nbsp</div>
+                    <div class="admin-section">
+                        <h3>Queue Options</h3>
+                        <ul class="admin-options">
+                            <li><a href="add_queue.php"><i class="fas fa-list"></i> Get Number</a></li>
+                            <li><a onclick="showPopup('moveQueuePopup', 'move_queue.php')"><i class="fas fa-exchange-alt"></i> Move the Number</a></li>
+                            <li><a href="manage_departments.php"><i class="fas fa-building"></i> Manage Departments</a></li>
+                        </ul>
+                    </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-        <div>&nbsp</div>
-        <div>&nbsp</div>
-        <div>&nbsp</div>
+            </div>
+            <div class="right-column">
+                <h2>Current Queues</h2>
+                <div class="queue-container" id="queueList">
+                    <?php foreach ($department_queues as $department => $queues): ?>
+                        <div class="queue-box">
+                            <h3><?= htmlspecialchars($department) ?></h3>
+                            <?php if (!empty($queues)): ?>
+                                <p>Active: <strong id="activeQueue-<?= $queues[0]['department_id'] ?>" class="active-queue"> <?= htmlspecialchars($queues[0]['number']) ?></strong></p>
+                                <p>Name: <?= htmlspecialchars($queues[0]['holder']) ?></p>
 
+                                <button class="animated-button" onclick="updateQueue(<?= $queues[0]['department_id'] ?>, 'prev')">⬅ Previous</button>
+                                <button class="animated-button" onclick="updateQueue(<?= $queues[0]['department_id'] ?>, 'next')">Next ➡</button>
+                            <?php else: ?>
+                                <p>No active queue</p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
         <div id="moveQueuePopup" class="popup">
             <h3>Move Queue</h3>
             <div id="moveQueueContent">
@@ -149,10 +152,13 @@ foreach ($queues as $queue) {
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-image: url(''); /* Replace with your image file */
+    background-image: url('assets/mdc.webp'); /* Replace with your image path */
     background-size: cover;
-    background-position: center;
+    background-repeat: no-repeat;
     background-attachment: fixed;
+    background-position: center;
+    margin: 0;
+    padding: 0;
 }
 
 body::before {
@@ -170,7 +176,7 @@ body::before {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.9); /* Slightly transparent background */
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -178,6 +184,26 @@ body::before {
 h2 {
     text-align: center;
     margin-bottom: 20px;
+}
+
+.admin-content {
+    display: flex;
+    gap: 20px;
+}
+
+.left-column {
+    flex: 0 0 30%; /* Anchored on the left using 30% of the screen */
+}
+
+.right-column {
+    flex: 1;
+}
+
+.boxed-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .admin-section {
@@ -215,6 +241,11 @@ h2 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.queue-box:hover {
+    transform: scale(1.05);
 }
 
 .queue-box h3 {

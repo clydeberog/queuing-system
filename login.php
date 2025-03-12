@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <style>
     body {
-        background-image: url('mdc.webp'); /* Replace with your image file */
+        background-image: url('assets/mdc.webp'); /* Replace with your image file */
         background-size: cover;
         background-position: center;
         background-attachment: fixed;

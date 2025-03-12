@@ -37,7 +37,7 @@ $departments = $pdo->query("SELECT * FROM departments")->fetchAll(PDO::FETCH_ASS
 
 <div>&nbsp </div>
 <div class="container">
-    <h2>Add to Queue</h2>
+    <h2>Get Number</h2>
     <form id="addQueueForm" method="POST">
         <label for="department_id">Select Department:</label>
         <select name="department_id" id="department_id" required onchange="updateQueueNumber()">
@@ -52,10 +52,11 @@ $departments = $pdo->query("SELECT * FROM departments")->fetchAll(PDO::FETCH_ASS
 
         <p>Next Queue Number: <strong id="queueNumber">-</strong></p>
 
-        <button type="submit">Add to Queue</button>
+        <button type="submit">Get Number</button>
     </form>
-    <button class="back-button" onclick="window.location.href='admin.php'">Back to Admin</button>
     <button class="print-button" onclick="printQueueNumber()">Print Queue Number</button>
+    <button class="back-button" onclick="window.location.href='admin.php'">Back to Admin</button>
+    
 </div>
 
 <script>
@@ -119,11 +120,22 @@ function printQueueNumber() {
 </script>
 
 <style>
+body {
+    background-image: url('mdc.webp'); /* Replace with your image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
 .container {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.9); /* Slightly transparent background */
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

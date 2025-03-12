@@ -18,11 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Departments</title>
     <style>
+        body {
+            background-image: url('assets/mdc.webp'); /* Replace with your image path */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f9f9f9;
+            background-color: rgba(249, 249, 249, 0.9); /* Slightly transparent background */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
