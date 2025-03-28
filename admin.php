@@ -78,6 +78,8 @@ foreach ($queues as $queue) {
     </div>
 
     <script>
+    const buttonClickSound = new Audio('assets/queue-bell.m4a'); // Replace with your sound file path
+
     function showPopup(popupId, url) {
         document.getElementById(popupId).style.display = 'block';
         fetch(url)
@@ -92,6 +94,7 @@ foreach ($queues as $queue) {
     }
 
     function updateQueue(departmentId, direction) {
+        buttonClickSound.play(); // Play the sound when the button is clicked
         fetch('update_queue.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -101,11 +104,8 @@ foreach ($queues as $queue) {
         .then(data => {
             if (data.success) {
                 document.getElementById(`activeQueue-${departmentId}`).textContent = data.new_active;
-                new Audio('notification.mp3').play();
-                setTimeout(() => {
-                    window.open('public_view.php', '_blank');
-                }, 500);
                 showNotification('Queue updated successfully!');
+                refreshQueueList(); // Refresh the queue list after updating
             } else {
                 alert(data.message);
             }
@@ -113,27 +113,39 @@ foreach ($queues as $queue) {
     }
 
     function refreshQueueList() {
-        fetch('fetch_queues.php')
-            .then(response => response.json())
-            .then(data => {
-                const queueList = document.getElementById('queueList');
-                queueList.innerHTML = '';
-                data.forEach(department => {
-                    const queueBox = document.createElement('div');
-                    queueBox.className = 'queue-box';
-                    queueBox.innerHTML = `
-                        <h3>${department.name}</h3>
-                        ${department.queues.length > 0 ? `
-                            <p>Active: <strong id="activeQueue-${department.queues[0].department_id}" class="active-queue">${department.queues[0].number}</strong></p>
-                            <p>Name: ${department.queues[0].holder}</p>
-                            <button class="animated-button" onclick="updateQueue(${department.queues[0].department_id}, 'prev')">⬅ Previous</button>
-                            <button class="animated-button" onclick="updateQueue(${department.queues[0].department_id}, 'next')">Next ➡</button>
-                        ` : '<p>No active queue</p>'}
-                    `;
-                    queueList.appendChild(queueBox);
-                });
-            });
-    }
+    fetch('fetch_queues.php')
+        .then(response => response.json())
+        .then(data => {
+            const queueList = document.getElementById('queueList');
+            queueList.innerHTML = ''; // Clear existing content
+
+            // Group queues by department
+            const groupedQueues = data.reduce((acc, queue) => {
+                if (!acc[queue.department_name]) {
+                    acc[queue.department_name] = [];
+                }
+                acc[queue.department_name].push(queue);
+                return acc;
+            }, {});
+
+            // Render queues
+            for (const [department, queues] of Object.entries(groupedQueues)) {
+                const queueBox = document.createElement('div');
+                queueBox.className = 'queue-box';
+                queueBox.innerHTML = `
+                    <h3>${department}</h3>
+                    ${queues.length > 0 ? `
+                        <p>Active: <strong id="activeQueue-${queues[0].department_id}" class="active-queue">${queues[0].number}</strong></p>
+                        <p>Name: ${queues[0].holder}</p>
+                        <button class="animated-button" onclick="updateQueue(${queues[0].department_id}, 'prev')">⬅ Previous</button>
+                        <button class="animated-button" onclick="updateQueue(${queues[0].department_id}, 'next')">Next ➡</button>
+                    ` : '<p>No active queue</p>'}
+                `;
+                queueList.appendChild(queueBox);
+            }
+        })
+        .catch(error => console.error('Error fetching queues:', error));
+}
 
     function showNotification(message) {
         const notification = document.getElementById('notification');
@@ -143,9 +155,9 @@ foreach ($queues as $queue) {
             notification.style.display = 'none';
         }, 5000);
     }
-    
-    setInterval(refreshQueueList, 5000);
-    </script>
+
+    setInterval(refreshQueueList, 5000); // Automatically refresh the queue list every 5 seconds
+</script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
