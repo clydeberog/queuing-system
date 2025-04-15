@@ -40,22 +40,19 @@ foreach ($queues as $queue) {
                 </div>
             </div>
             <div class="right-column">
-                <h2>Current Queues</h2>
+            <h2>Current Queues</h2>
+                <div>
+                    <label for="departmentSelect">Select Department:</label>
+                        <select id="departmentSelect" onchange="refreshQueueList()">
+                            <option value="">-- Select Department --</option>
+                            <?php foreach ($department_queues as $department => $queues): ?>
+                                <option value="<?= htmlspecialchars($department) ?>"><?= htmlspecialchars($department) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                </div>
+                <div>&nbsp</div>
                 <div class="queue-container" id="queueList">
-                    <?php foreach ($department_queues as $department => $queues): ?>
-                        <div class="queue-box">
-                            <h3><?= htmlspecialchars($department) ?></h3>
-                            <?php if (!empty($queues)): ?>
-                                <p>Active: <strong id="activeQueue-<?= $queues[0]['department_id'] ?>" class="active-queue"> <?= htmlspecialchars($queues[0]['number']) ?></strong></p>
-                                <p>Name: <?= htmlspecialchars($queues[0]['holder']) ?></p>
-
-                                <button class="animated-button" onclick="updateQueue(<?= $queues[0]['department_id'] ?>, 'prev')">⬅ Previous</button>
-                                <button class="animated-button" onclick="updateQueue(<?= $queues[0]['department_id'] ?>, 'next')">Next ➡</button>
-                            <?php else: ?>
-                                <p>No active queue</p>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
+                    <p>Please select a department to view its queue.</p>
                 </div>
             </div>
         </div>
@@ -113,35 +110,34 @@ foreach ($queues as $queue) {
     }
 
     function refreshQueueList() {
-    fetch('fetch_queues.php')
+    const department = document.getElementById('departmentSelect').value; // Get the selected department
+    if (!department) {
+        document.getElementById('queueList').innerHTML = '<p>Please select a department to view its queue.</p>';
+        return;
+    }
+
+    fetch('fetch_queues.php') // Fetch the queue data
         .then(response => response.json())
         .then(data => {
             const queueList = document.getElementById('queueList');
             queueList.innerHTML = ''; // Clear existing content
 
-            // Group queues by department
-            const groupedQueues = data.reduce((acc, queue) => {
-                if (!acc[queue.department_name]) {
-                    acc[queue.department_name] = [];
-                }
-                acc[queue.department_name].push(queue);
-                return acc;
-            }, {});
+            // Filter queues for the selected department
+            const departmentQueues = data.filter(queue => queue.department_name === department);
 
-            // Render queues
-            for (const [department, queues] of Object.entries(groupedQueues)) {
+            if (departmentQueues.length > 0) {
                 const queueBox = document.createElement('div');
                 queueBox.className = 'queue-box';
                 queueBox.innerHTML = `
                     <h3>${department}</h3>
-                    ${queues.length > 0 ? `
-                        <p>Active: <strong id="activeQueue-${queues[0].department_id}" class="active-queue">${queues[0].number}</strong></p>
-                        <p>Name: ${queues[0].holder}</p>
-                        <button class="animated-button" onclick="updateQueue(${queues[0].department_id}, 'prev')">⬅ Previous</button>
-                        <button class="animated-button" onclick="updateQueue(${queues[0].department_id}, 'next')">Next ➡</button>
-                    ` : '<p>No active queue</p>'}
+                    <p>Active: <strong id="activeQueue-${departmentQueues[0].department_id}" class="active-queue">${departmentQueues[0].number}</strong></p>
+                    <p>Name: ${departmentQueues[0].holder}</p>
+                    <button class="animated-button" onclick="updateQueue(${departmentQueues[0].department_id}, 'prev')">⬅ Previous</button>
+                    <button class="animated-button" onclick="updateQueue(${departmentQueues[0].department_id}, 'next')">Next ➡</button>
                 `;
                 queueList.appendChild(queueBox);
+            } else {
+                queueList.innerHTML = '<p>No active queue for this department.</p>';
             }
         })
         .catch(error => console.error('Error fetching queues:', error));
