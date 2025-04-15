@@ -52,7 +52,7 @@ $departments = $pdo->query("SELECT * FROM departments")->fetchAll(PDO::FETCH_ASS
 
         <p>Next Queue Number: <strong id="queueNumber">-</strong></p>
 
-        <button type="submit">Get Number</button>
+        <button type="submit" onclick="printQueueNumber()">Get Number</button>
     </form>
     <button class="print-button" onclick="printQueueNumber()">Print Queue Number</button>
     <button class="back-button" onclick="window.location.href='admin.php'">Back to Admin</button>
